@@ -563,9 +563,10 @@
             cardContainer.innerHTML = '';
 
             chosenMenus.forEach((menu, index) => {
-                // 純粋な数値にパースして3桁カンマ付きにフォーマットします
-                const numericPrice = Number(menu.price.replace(/[^0-9]/g, ''));
-                const formattedPrice = isNaN(numericPrice) ? menu.price : numericPrice.toLocaleString();
+                // 純粋な数値にパースして3桁カンマ付きにフォーマットします（数値型・文字列型の両方に安全に対応）
+                const priceStr = menu.price !== undefined && menu.price !== null ? String(menu.price) : '0';
+                const numericPrice = Number(priceStr.replace(/[^0-9]/g, ''));
+                const formattedPrice = isNaN(numericPrice) ? priceStr : numericPrice.toLocaleString();
 
                 const cardHtml = `
                     <div class="bg-slate-800/90 backdrop-blur rounded-2xl overflow-hidden border border-slate-700 hover:border-indigo-500/50 transition-all duration-300 transform hover:-translate-y-1 fade-in-up flex flex-col justify-between" style="animation-delay: ${index * 0.25}s">
