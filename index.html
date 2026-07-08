@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PLGT2FE33D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-PLGT2FE33D');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PLGT2FE33D"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PLGT2FE33D');
+    </script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>レストランIPUTガチャ - 専用プロトタイプ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* 横スクロール発生を防ぐための安全な全幅確保設定 */
         html, body {
@@ -87,7 +86,7 @@
             animation: fade-in-up 0.6s ease forwards;
         }
 
-        /* 無限流れる画像（マーキー・カルーセル）アニメーション */
+        /* 無限流れる画像アニメーション。CSS変数 --marquee-duration をJSから制御して、スマホでもPCでも同じ等速スピードにします */
         @keyframes marquee {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -95,15 +94,16 @@
         .animate-marquee {
             display: flex;
             width: max-content;
-            animation: marquee 22s linear infinite;
+            animation: marquee var(--marquee-duration, 20s) linear infinite;
         }
         .animate-marquee:hover {
-            animation-play-state: paused; /* マウスホバーで流れを一時停止 */
+            animation-play-state: paused; /* PCでのホバー時のみ一時停止 */
         }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
+    <!-- Header Area -->
     <header class="bg-slate-800 border-b border-slate-700 py-4 px-6 shadow-md">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -118,7 +118,7 @@
                 </div>
             </div>
             <div class="text-xs bg-slate-700 py-1 px-3 rounded-full text-slate-300 font-mono">
-                Menu-Data v1.14
+                Menu-Data v1.15
             </div>
         </div>
     </header>
@@ -145,7 +145,7 @@
                         <div class="absolute w-8 h-8 rounded-full bg-cyan-500 bottom-2 left-10 opacity-80 border border-white/20"></div>
                         <div class="absolute w-8 h-8 rounded-full bg-purple-500 bottom-6 right-8 opacity-80 border border-white/20"></div>
                         <div class="absolute w-8 h-8 rounded-full bg-emerald-500 top-2 right-16 opacity-70 border border-white/20"></div>
-                        <i class="fa-solid fa-bowl-food text-slate-600/30 text-6xl absolute z-0"></i>
+                        <i class="fa-solid fa-utensils text-slate-600/30 text-6xl absolute z-0"></i>
                     </div>
                     <div class="h-24 bg-emerald-600 flex flex-col justify-center items-center relative z-10">
                         <div class="gacha-handle w-14 h-14 rounded-full bg-slate-100 border-4 border-slate-300 flex items-center justify-center shadow-md group-hover:rotate-12 transition-transform duration-300">
@@ -195,8 +195,8 @@
 
             <div id="menu-cards" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8"></div>
 
-            <!-- ボタンコンテナ: 「もう一度」と「アンケート」を並列配置 -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-4 justify-center items-center w-full max-w-2xl px-4">
+            <!-- ボタンコンテナ: 上下の余白（my-10）を確保し、操作しやすい配置 -->
+            <div class="flex flex-col sm:flex-row gap-4 my-10 justify-center items-center w-full max-w-2xl px-4">
                 <button onclick="resetGame()" class="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-black py-4 px-8 rounded-full shadow-lg shadow-indigo-950/40 hover:shadow-indigo-950/60 transform hover:-translate-y-1 active:translate-y-0 transition-all duration-200 text-lg flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-rotate-left"></i>
                     <span>もう一度ガチャを回す</span>
@@ -211,9 +211,10 @@
         <!-- 4. 常に表示される店舗情報エリア (親幅いっぱいに完全に引き伸ばされたレスポンシブな枠) -->
         <div id="store-info-container" class="w-full bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden mt-6 shadow-xl transition-all duration-500 flex flex-col">
             
-            <!-- 店舗情報枠の幅いっぱいに完全に密着して流れる大迫力無限スライダ -->
-            <div class="w-full bg-slate-950 border-b border-slate-700 overflow-hidden flex items-center h-44 md:h-60">
+            <!-- 店舗情報枠の幅いっぱいに完全に密着して流れる大迫力無限スライダ (h-28 sm:h-44 md:h-60 でモバイルでもピッタリの高さ) -->
+            <div class="w-full bg-slate-950 border-b border-slate-700 overflow-hidden flex items-center h-28 sm:h-44 md:h-60">
                 <div class="animate-marquee flex flex-row" id="marquee-container">
+                    <!-- JSによりここに動的・レスポンシブな流れる画像が挿入されます -->
                 </div>
             </div>
 
@@ -257,19 +258,20 @@
 
     <script>
         // --- 確実かつ高精細な洋食メニューデータベース (4種類) ---
+        // 価格データはプレーンな数字形式とし、プログラム側で一律で「￥」マークをフォーマット付与します
         let menuDatabase = [
             {
                 name: "IPUT特製 DXハンバーグステーキ",
                 badge: "肉汁溢れる当店No.1看板メニュー",
-                price: "¥1,280",
-                comment: "溢れ出る旨味の肉汁 and 1週間じっくり煮込んだコク深い秘伝のデミグラスソースが絶妙に絡み合う王道の逸品。外はこんがり、中は驚くほどふっくらジューシーに焼き上げています。",
+                price: "1280",
+                comment: "溢れ出る旨味の肉汁と、1週間じっくり煮込んだコク深い秘伝のデミグラスソースが絶妙に絡み合う王道の逸品。外はこんがり、中は驚くほどふっくらジューシーに焼き上げています。",
                 imageUrl: "https://t4.ftcdn.net/jpg/01/64/95/35/360_F_164953558_Km5oiWKID0PbHDwkeHR137TBcI7f9tRJ.jpg",
                 fallbackUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600"
             },
             {
                 name: "贅沢ふわとろオムライス",
-                badge: "とろける卵と濃厚ソースの極み",
-                price: "¥1,100",
+                badge: "とろける卵と濃厚ソース of 極み",
+                price: "1100",
                 comment: "厳選されたブランド卵を贅沢に3個使用し、熟練のシェフが絶妙な火加減でふわとろに仕上げました。芳醇なバター香るチキンライスの上に、特製ケチャップをたっぷりかけた至福の一皿です。",
                 imageUrl: "https://t3.ftcdn.net/jpg/03/04/29/82/360_F_304298240_nDaCCknro6g9aNq20qYjibgfa8tuXfDB.jpg",
                 fallbackUrl: "https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80&w=600"
@@ -277,105 +279,120 @@
             {
                 name: "シェフ特製 具だくさんシーフード焼きカレー",
                 badge: "海の幸の旨味がスパイスと融合",
-                price: "¥1,050",
-                comment: "プリプリのエビ、大ぶりのイカ、アサリなど贅沢な海の幸をふんだんに使用した自慢の本格カレー。オーブンでじっくり焼き上げ、とろ〜り溶けた焦がしチーズ of 香ばしさが食欲を極限までそそります。",
+                price: "1050",
+                comment: "プリプリのエビ、大ぶりのイカ、アサリなど贅沢な海の幸をふんだんに使用した自慢の本格カレー。オーブンでじっくり焼き上げ、とろ〜り溶けた焦がしチーズの香ばしさが食欲をそそります。",
                 imageUrl: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600",
                 fallbackUrl: "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&q=80&w=600"
             },
             {
                 name: "濃厚クリーミーカルボナーラ 〜完熟温玉のせ〜",
                 badge: "本場パルミジャーノが豊かに香る",
-                price: "¥980",
-                comment: "最高級パルミジャーノ・レッジャーノチーズ and 新鮮な生クリームを惜しみなく使った超濃厚ソースのパスタ。肉厚でカリカリに炒めたベーコンの塩気と、中央に鎮座する温玉を絡めれば完璧な調和が生まれます。",
+                price: "980",
+                comment: "最高級パルミジャーノ・レッジャーノチーズと新鮮な生クリームを惜しみなく使った超濃厚ソースのパスタ。肉厚でカリカリに炒めたベーコンの塩気と、中央に鎮座する温玉を絡めれば完璧な調和が生まれます。",
                 imageUrl: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80&w=600",
                 fallbackUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=600"
             }
         ];
 
-        // ★ここを追加：GASのURLからデータを読み込む関数
-async function loadMenuFromSpreadsheet() {
-    // 先ほどGASでコピーした「ウェブアプリのURL」をここに貼り付けます
-    const gasUrl = "https://script.google.com/macros/s/AKfycbxyvMBQrDKWzMapTgaJx22BeWCsd1S5KsWKp2A9tLp7JEGk42H6ni3nEsCwnTHyFOoP/exec"; 
-    
-    try {
-        const response = await fetch(gasUrl);
-        if (!response.ok) throw new Error('ネットワークエラーが発生しました');
-        
-        const data = await response.json();
-        
-        // データが正しく取得できたら、menuDatabase をスプレッドシートの中身で上書きする
-        if (data && data.length > 0) {
-            menuDatabase = data;
-            console.log("スプレッドシートからメニューを正常に読み込みました！", menuDatabase);
-        }
-    } catch (error) {
-        console.error("スプレッドシートの読み込みに失敗したため、バックアップデータを使用します:", error);
-    }
-}
-
-// ★1. カルーセル画像を自動生成する新しい関数を追加
-function generateCarouselFromData() {
-    const container = document.getElementById('marquee-container');
-    if (!container) return;
-
-    // 一度中身を完全に空にする
-    container.innerHTML = '';
-
-    // 無限ループ（マーキー）を成立させるため、同じ画像リストを「2回」繰り返して作成する
-    for (let loop = 0; loop < 2; loop++) {
-        // 周回用の枠（div）を作成
-        const listDiv = document.createElement('div');
-        listDiv.className = "flex flex-row shrink-0 space-x-0";
-
-        // スプレッドシートから取得したメニューを1枚ずつ画像にする
-        menuDatabase.forEach(menu => {
-            const img = document.createElement('img');
-            img.src = menu.imageUrl;
-            img.alt = menu.name;
-            // 現在の綺麗な見た目を維持するスタイルクラス
-            img.className = "w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0";
+        // スプレッドシートからデータを取得するための関数。URLが未設定でもエラーを起こさないガード機能付き
+        async function loadMenuFromSpreadsheet() {
+            // Google Apps Script(GAS)のウェブアプリURLをここに貼り付けます
+            const gasUrl = "https://script.google.com/macros/s/AKfycbxyvMBQrDKWzMapTgaJx22BeWCsd1S5KsWKp2A9tLp7JEGk42H6ni3nEsCwnTHyFOoP/exec"; 
             
-            // 万が一、スプレッドシートの画像URLが壊れていた場合のバックアップ処理
-            img.onerror = function() {
-                this.src = menu.fallbackUrl;
-            };
+            // プレースホルダーまたは空欄の場合は通信をせず、標準の優秀なバックアップデータで起動させます
+            if (!gasUrl || gasUrl.includes("あなたのGAS") || gasUrl.trim() === "") {
+                console.log("GASのURLが未設定またはデフォルトのため、内蔵メニューデータベースを使用します。");
+                generateCarouselFromData();
+                return;
+            }
+            
+            try {
+                const response = await fetch(gasUrl);
+                if (!response.ok) throw new Error('スプレッドシートの通信に失敗しました');
+                
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    menuDatabase = data;
+                    console.log("スプレッドシートからメニューデータを正常同期しました！", menuDatabase);
+                }
+            } catch (error) {
+                console.error("スプレッドシートの取得に失敗したため、バックアップデータを使用します:", error);
+            } finally {
+                // スプレッドシートの成否に関わらず、最終的に届いたデータでカルーセルを自動生成
+                generateCarouselFromData();
+            }
+        }
 
-            // 枠の中に画像を入れる
-            listDiv.appendChild(img);
+        // スマホでもPCでも完全に心地よい等速「秒速50px」で流れる画像を自動生成する関数
+        function generateCarouselFromData() {
+            const container = document.getElementById('marquee-container');
+            if (!container) return;
+
+            // 一ったんコンテナをクリーンにする
+            container.innerHTML = '';
+
+            // スプレッドシート側のメニュー数が少なくても、無限マーキーが絶対に途切れないよう、最低6枚以上になるまで画像を複製
+            const minItems = 6;
+            let renderList = [...menuDatabase];
+            if (renderList.length > 0) {
+                while (renderList.length < minItems) {
+                    renderList = renderList.concat(menuDatabase);
+                }
+            }
+
+            // 無限ループの物理的接続のため、作成したリストを「2セット」並列に配置します
+            for (let loop = 0; loop < 2; loop++) {
+                const listDiv = document.createElement('div');
+                listDiv.className = "flex flex-row shrink-0 space-x-0";
+
+                renderList.forEach(menu => {
+                    const img = document.createElement('img');
+                    img.src = menu.imageUrl;
+                    img.alt = menu.name;
+                    // スマホでは w-40(160px)/h-28(112px) でたくさんの画像が見えるようにし、PCでは w-96/h-60 でダイナミックに見せます
+                    img.className = "w-40 sm:w-64 md:w-96 h-28 sm:h-44 md:h-60 object-cover block shadow-inner m-0 p-0";
+                    
+                    img.onerror = function() {
+                        this.src = menu.fallbackUrl;
+                    };
+
+                    listDiv.appendChild(img);
+                });
+
+                container.appendChild(listDiv);
+            }
+
+            // 現在のデバイスの画面横幅を検知し、画像の物理幅（px）をもとに、1周分の正確な横幅を計算します
+            const windowWidth = window.innerWidth;
+            let itemWidth = 160; // モバイル用 (w-40)
+            if (windowWidth >= 768) {
+                itemWidth = 384; // PC用 (w-96)
+            } else if (windowWidth >= 640) {
+                itemWidth = 256; // タブレット用 (w-64)
+            }
+
+            const oneLoopTotalWidth = renderList.length * itemWidth;
+
+            // 「秒速50px」の滑らかな速度になるようにアニメーション秒数を動的に割り出します (幅 / 50px)
+            // 極端な挙動を防ぐため、最低8秒〜最大60秒の制限を設定
+            const calculatedDuration = Math.min(60, Math.max(8, oneLoopTotalWidth / 50));
+            container.style.setProperty('--marquee-duration', `${calculatedDuration}s`);
+        }
+
+        // 画面読み込み完了時に自動実行
+        window.addEventListener('DOMContentLoaded', () => {
+            loadMenuFromSpreadsheet();
         });
 
-        // カルーセルの本体に合体させる
-        container.appendChild(listDiv);
-    }
-}
-
-// 2. 既存の読み込み関数の中で、上記の関数を呼び出すようにする
-async function loadMenuFromSpreadsheet() {
-    const gasUrl = "https://script.google.com/macros/s/AKfycbxyvMBQrDKWzMapTgaJx22BeWCsd1S5KsWKp2A9tLp7JEGk42H6ni3nEsCwnTHyFOoP/exec"; 
-    
-    try {
-        const response = await fetch(gasUrl);
-        if (!response.ok) throw new Error('エラー発生');
-        const data = await response.json();
-        
-        if (data && data.length > 0) {
-            menuDatabase = data;
-            console.log("スプレッドシートの読み込み成功！");
-            
-            // ★ここを追加：データが届いたらカルーセルも自動生成する
-            generateCarouselFromData();
-        }
-    } catch (error) {
-        console.error("失敗したためバックアップを使用します", error);
-        // バックアップデータ（初期値）がある場合も、一応カルーセルを生成しておく
-        generateCarouselFromData();
-    }
-}
-
-// 画面が読み込まれた瞬間に、自動でスプレッドシートのデータを読み込む
-window.addEventListener('DOMContentLoaded', () => {
-    loadMenuFromSpreadsheet();
-});
+        // 画面リサイズ時にカルーセル速度を再追従計算させる（スマホ回転時などの対策）
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                generateCarouselFromData();
+            }, 250);
+        });
 
         // カプセルのカラー定義
         const capsuleColors = {
@@ -435,7 +452,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }
 
-        // --- 4つのメニューから重複なしで2つを完全ランダム抽出 ---
+        // --- メニューから重複なしで2つを完全ランダム抽出 ---
         function selectTargetMenus() {
             const list = [...menuDatabase];
             const shuffled = list.sort(() => 0.5 - Math.random());
@@ -534,7 +551,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }, 1500);
         }
 
-        // --- 結果の反映・描画 ---
+        // --- 結果の反映・描画 (価格データを数値変換し、確実に￥表記と3桁カンマ付きで描画します) ---
         function showResults() {
             document.getElementById('animation-stage').classList.add('hidden');
             document.getElementById('guide-text').classList.add('hidden');
@@ -546,10 +563,14 @@ window.addEventListener('DOMContentLoaded', () => {
             cardContainer.innerHTML = '';
 
             chosenMenus.forEach((menu, index) => {
+                // 純粋な数値にパースして3桁カンマ付きにフォーマットします
+                const numericPrice = Number(menu.price.replace(/[^0-9]/g, ''));
+                const formattedPrice = isNaN(numericPrice) ? menu.price : numericPrice.toLocaleString();
+
                 const cardHtml = `
                     <div class="bg-slate-800/90 backdrop-blur rounded-2xl overflow-hidden border border-slate-700 hover:border-indigo-500/50 transition-all duration-300 transform hover:-translate-y-1 fade-in-up flex flex-col justify-between" style="animation-delay: ${index * 0.25}s">
                         <div>
-                            <!-- メニュー写真 (onError時に自動で美しいお料理写真をフォールバック) -->
+                            <!-- メニュー写真 -->
                             <div class="h-52 w-full overflow-hidden relative">
                                 <img src="${menu.imageUrl}" alt="${menu.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onerror="this.src='${menu.fallbackUrl}'">
                                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
@@ -559,10 +580,10 @@ window.addEventListener('DOMContentLoaded', () => {
                             </div>
 
                             <div class="p-6">
-                                <!-- 価格バッジ -->
+                                <!-- 価格バッジ (確実に￥マークを標準付与して美しく表示) -->
                                 <div class="flex items-center justify-between mb-3">
                                     <span class="text-xs text-indigo-300 font-bold tracking-wider">RESTAURANT IPUT MENU</span>
-                                    <span class="text-lg font-black text-amber-400 bg-amber-400/10 px-3 py-0.5 rounded border border-amber-400/20">￥${menu.price}</span>
+                                    <span class="text-lg font-black text-amber-400 bg-amber-400/10 px-3 py-0.5 rounded border border-amber-400/20">￥${formattedPrice}</span>
                                 </div>
 
                                 <!-- メニュー名 -->
