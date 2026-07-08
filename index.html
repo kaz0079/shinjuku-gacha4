@@ -281,7 +281,7 @@
 
     <script>
         // --- 確実かつ高精細な洋食メニューデータベース (4種類) ---
-        const menuDatabase = [
+        let menuDatabase = [
             {
                 name: "IPUT特製 DXハンバーグステーキ",
                 badge: "肉汁溢れる当店No.1看板メニュー",
@@ -315,6 +315,32 @@
                 fallbackUrl: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=600"
             }
         ];
+
+        // ★ここを追加：GASのURLからデータを読み込む関数
+async function loadMenuFromSpreadsheet() {
+    // 先ほどGASでコピーした「ウェブアプリのURL」をここに貼り付けます
+    const gasUrl = "https://script.google.com/macros/s/AKfycbxyvMBQrDKWzMapTgaJx22BeWCsd1S5KsWKp2A9tLp7JEGk42H6ni3nEsCwnTHyFOoP/exec"; 
+    
+    try {
+        const response = await fetch(gasUrl);
+        if (!response.ok) throw new Error('ネットワークエラーが発生しました');
+        
+        const data = await response.json();
+        
+        // データが正しく取得できたら、menuDatabase をスプレッドシートの中身で上書きする
+        if (data && data.length > 0) {
+            menuDatabase = data;
+            console.log("スプレッドシートからメニューを正常に読み込みました！", menuDatabase);
+        }
+    } catch (error) {
+        console.error("スプレッドシートの読み込みに失敗したため、バックアップデータを使用します:", error);
+    }
+}
+
+// 画面が読み込まれた瞬間に、自動でスプレッドシートのデータを読み込む
+window.addEventListener('DOMContentLoaded', () => {
+    loadMenuFromSpreadsheet();
+});
 
         // カプセルのカラー定義
         const capsuleColors = {
