@@ -213,32 +213,9 @@
             
             <!-- 店舗情報枠の幅いっぱいに完全に密着して流れる大迫力無限スライダ -->
             <div class="w-full bg-slate-950 border-b border-slate-700 overflow-hidden flex items-center h-44 md:h-60">
-                <div class="animate-marquee flex flex-row">
-                    <!-- 画像スライドリスト1周目 (完全に安定表示される精選洋食画像、隙間マージンは完全ゼロ) -->
-                    <div class="flex flex-row shrink-0 space-x-0">
-                        <img src="https://t4.ftcdn.net/jpg/01/64/95/35/360_F_164953558_Km5oiWKID0PbHDwkeHR137TBcI7f9tRJ.jpg" alt="ハンバーグ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <!-- カルーセル内のオムライス画像URL不備を修正 -->
-                        <img src="https://t3.ftcdn.net/jpg/03/04/29/82/360_F_304298240_nDaCCknro6g9aNq20qYjibgfa8tuXfDB.jpg" alt="ふわふわオムライス" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800" alt="シーフードカレー" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80&w=800" alt="濃厚カルボナーラ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=800" alt="本格ピザ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800" alt="フレッシュサラダ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=800" alt="焦がしカラメルプリン" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" alt="厚切り極上ステーキ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                    </div>
-                    <!-- 無限ループ用スライドリスト2周目 -->
-                    <div class="flex flex-row shrink-0 space-x-0">
-                        <img src="https://t4.ftcdn.net/jpg/01/64/95/35/360_F_164953558_Km5oiWKID0PbHDwkeHR137TBcI7f9tRJ.jpg" alt="ハンバーグ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <!-- カルーセル内のオムライス画像URL不備を修正 -->
-                        <img src="https://t3.ftcdn.net/jpg/03/04/29/82/360_F_304298240_nDaCCknro6g9aNq20qYjibgfa8tuXfDB.jpg" alt="ふわふわオムライス" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800" alt="シーフードカレー" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80&w=800" alt="濃厚カルボナーラ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=800" alt="本格ピザ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800" alt="フレッシュサラダ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=800" alt="焦がしカラメルプリン" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" alt="厚切り極上ステーキ" class="w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0">
-                    </div>
-                </div>
+               <div class="animate-marquee flex flex-row" id="marquee-container">
+            </div>
+                
             </div>
 
             <!-- 下部の詳細コンテンツ -->
@@ -334,6 +311,65 @@ async function loadMenuFromSpreadsheet() {
         }
     } catch (error) {
         console.error("スプレッドシートの読み込みに失敗したため、バックアップデータを使用します:", error);
+    }
+}
+
+// ★1. カルーセル画像を自動生成する新しい関数を追加
+function generateCarouselFromData() {
+    const container = document.getElementById('marquee-container');
+    if (!container) return;
+
+    // 一度中身を完全に空にする
+    container.innerHTML = '';
+
+    // 無限ループ（マーキー）を成立させるため、同じ画像リストを「2回」繰り返して作成する
+    for (let loop = 0; loop < 2; loop++) {
+        // 周回用の枠（div）を作成
+        const listDiv = document.createElement('div');
+        listDiv.className = "flex flex-row shrink-0 space-x-0";
+
+        // スプレッドシートから取得したメニューを1枚ずつ画像にする
+        menuDatabase.forEach(menu => {
+            const img = document.createElement('img');
+            img.src = menu.imageUrl;
+            img.alt = menu.name;
+            // 現在の綺麗な見た目を維持するスタイルクラス
+            img.className = "w-64 md:w-96 h-44 md:h-60 object-cover block shadow-inner m-0 p-0";
+            
+            // 万が一、スプレッドシートの画像URLが壊れていた場合のバックアップ処理
+            img.onerror = function() {
+                this.src = menu.fallbackUrl;
+            };
+
+            // 枠の中に画像を入れる
+            listDiv.appendChild(img);
+        });
+
+        // カルーセルの本体に合体させる
+        container.appendChild(listDiv);
+    }
+}
+
+// 2. 既存の読み込み関数の中で、上記の関数を呼び出すようにする
+async function loadMenuFromSpreadsheet() {
+    const gasUrl = "https://script.google.com/macros/s/AKfycbxyvMBQrDKWzMapTgaJx22BeWCsd1S5KsWKp2A9tLp7JEGk42H6ni3nEsCwnTHyFOoP/exec"; 
+    
+    try {
+        const response = await fetch(gasUrl);
+        if (!response.ok) throw new Error('エラー発生');
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            menuDatabase = data;
+            console.log("スプレッドシートの読み込み成功！");
+            
+            // ★ここを追加：データが届いたらカルーセルも自動生成する
+            generateCarouselFromData();
+        }
+    } catch (error) {
+        console.error("失敗したためバックアップを使用します", error);
+        // バックアップデータ（初期値）がある場合も、一応カルーセルを生成しておく
+        generateCarouselFromData();
     }
 }
 
